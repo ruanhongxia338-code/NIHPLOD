@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIHPLOD | 肌理·艺境</title>
+    
+    <!-- 引入字体：Playfair Display (衬线) & Inter (无衬线) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    
+    <!-- 引入 Tailwind CSS (用于快速构建样式) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 配置 Tailwind 自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#F2F0EB',       // 米灰白 Canvas
+                        ink: '#3E3C3A',      // 深炭灰 Ink
+                        nihplod: '#8A9A9B',  // 雾霾蓝绿 Tone
+                        skin: '#D8C8BD',     // 肉桂粉灰 Skin
+                        stone: '#9E978E',    // 暖岩灰 Stone
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'SimSun', 'serif'],
+                        sans: ['"Inter"', 'PingFang SC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 自定义 CSS 细节 -->
+    <style>
+        body {
+            background-color: #F2F0EB;
+            color: #3E3C3A;
+            cursor: none; /* 隐藏默认光标，使用自定义光标 */
+            overflow-x: hidden;
+        }
+
+        /* 自定义光标样式 */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3E3C3A;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(62, 60, 58, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* 隐藏滚动条但保留功能 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F2F0EB;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D8C8BD;
+            border-radius: 4px;
+        }
+
+        /* 图片容器样式，用于视差效果 */
+        .img-container {
+            overflow: hidden;
+        }
+        .img-parallax {
+            width: 110%;
+            height: 110%;
+            object-fit: cover;
+            transform: scale(1.1); /* 预留放大空间给视差 */
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-nihplod selection:text-white">
+
+    <!-- 自定义光标 DOM -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full px-8 py-6 flex justify-between items-center z-50 mix-blend-difference text-ink">
+        <div class="text-2xl font-serif tracking-widest font-medium">NIHPLOD</div>
+        <div class="group flex items-center gap-2 cursor-pointer hover-trigger">
+            <span class="text-sm uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500">Menu</span>
+            <div class="w-10 h-10 rounded-full border border-ink/30 flex items-center justify-center group-hover:bg-ink group-hover:text-bg transition-all duration-300">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="0" y1="12" x2="24" y2="12"></line>
+                    <line x1="0" y1="4" x2="24" y2="4"></line>
+                    <line x1="0" y1="20" x2="24" y2="20"></line>
+                </svg>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页 Hero Section: 拼贴风格 -->
+    <section class="min-h-screen pt-32 pb-20 px-4 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative">
+        
+        <!-- 左侧文字区 -->
+        <div class="md:col-span-5 flex flex-col justify-center z-10 hero-text-area">
+            <p class="text-stone uppercase tracking-[0.2em] text-xs mb-4 hero-anim">EST. 2024</p>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8 hero-anim text-ink">
+                Reshaping <br>
+                <i class="font-light italic text-nihplod">Time & Texture</i>
+            </h1>
+            <p class="text-lg md:text-xl font-light text-ink/80 max-w-md hero-anim">
+                NIHPLOD · 重塑时光的肌理。<br>
+                在静谧中，探索肌肤的艺术。
+            </p>
+            <div class="mt-12 hero-anim">
+                <a href="#" class="inline-block border-b border-ink pb-1 hover:text-nihplod hover:border-nihplod transition-colors duration-300 hover-trigger">
+                    EXPLORE COLLECTION
+                </a>
+            </div>
+        </div>
+
+        <!-- 右侧视频/图片遮罩区 -->
+        <div class="md:col-span-7 h-[60vh] md:h-[80vh] relative img-container hero-img-area">
+            <!-- 使用Unsplash图片模拟柔和的护肤品质地 -->
+            <img src="https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?q=80&w=2574&auto=format&fit=crop" 
+                 alt="Cream Texture" 
+                 class="img-parallax absolute inset-0 w-full h-full object-cover rounded-[2rem] md:rounded-tl-[8rem] md:rounded-br-[8rem]">
+            
+            <!-- 悬浮的小图拼贴 -->
+            <div class="absolute -bottom-10 -left-10 w-40 h-56 md:w-56 md:h-72 bg-white p-2 shadow-xl rotate-3 floating-card hidden md:block">
+                <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=2574&auto=format&fit=crop" 
+                     class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- 滚动过渡文字 -->
+    <section class="py-32 px-4 md:px-24 bg-white/50 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="font-serif text-3xl md:text-5xl leading-tight text-ink reveal-text opacity-20">
+                "True luxury is <span class="text-nihplod italic">quiet</span>. It is the feeling of water, the scent of stone, and the touch of time."
+            </p>
+            <p class="mt-8 text-stone font-sans font-light reveal-text opacity-20">真正的奢华是静谧的。是水的触感，岩石的气息，与时间的抚摸。</p>
+        </div>
+    </section>
+
+    <!-- 产品策展画廊 (Masonry/Collage Layout) -->
+    <section class="py-20 px-4 md:px-12 bg-bg">
+        <div class="flex justify-between items-end mb-16 px-2">
+            <h2 class="font-serif text-4xl">The Gallery</h2>
+            <span class="text-stone text-sm tracking-widest">CURATED SELECTION</span>
+        </div>
+
+        <!-- 错落网格 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-y-24">
+            
+            <!-- 产品 1：大卡片 -->
+            <div class="md:col-span-2 group gallery-item cursor-pointer hover-trigger" data-cursor-text="VIEW">
+                <div class="relative h-[600px] overflow-hidden rounded-sm img-container">
+                    <img src="https://images.unsplash.com/photo-1556228720-1987df56214a?q=80&w=2564&auto=format&fit=crop" 
+                         class="img-parallax w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                </div>
+                <div class="mt-6 flex justify-between items-start">
+                    <div>
+                        <h3 class="font-serif text-2xl italic">The Essence</h3>
+                        <p class="text-stone text-sm mt-1">赋活精粹水 · 150ml</p>
+                    </div>
+                    <span class="text-ink">¥ 1,280</span>
+                </div>
+            </div>
+
+            <!-- 留白/装饰占位 -->
+            <div class="hidden md:flex flex-col justify-end pb-12 gallery-item">
+                <p class="font-serif text-lg leading-relaxed text-stone italic">
+                    提取自深海藻类的<br>生命原力，<br>唤醒沉睡细胞。
+                </p>
+            </div>
+
+            <!-- 产品 2：小卡片 -->
+            <div class="md:col-span-1 md:mt-[-100px] group gallery-item cursor-pointer hover-trigger" data-cursor-text="VIEW">
+                <div class="relative h-[400px] overflow-hidden rounded-sm img-container bg-stone/10">
+                    <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=2574&auto=format&fit=crop" 
+                         class="img-parallax w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                </div>
+                <div class="mt-6">
+                    <h3 class="font-serif text-2xl italic">Luminous Cream</h3>
+                    <p class="text-stone text-sm mt-1">光蕴焕颜霜 · 50g</p>
+                    <p class="text-ink mt-2">¥ 2,450</p>
+                </div>
+            </div>
+
+            <!-- 产品 3：中卡片 -->
+            <div class="md:col-span-1 group gallery-item cursor-pointer hover-trigger" data-cursor-text="VIEW">
+                 <div class="relative h-[450px] overflow-hidden rounded-sm img-container">
+                    <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=2680&auto=format&fit=crop" 
+                         class="img-parallax w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                </div>
+                 <div class="mt-6">
+                    <h3 class="font-serif text-2xl italic">The Serum</h3>
+                    <p class="text-stone text-sm mt-1">夜间修护油 · 30ml</p>
+                    <p class="text-ink mt-2">¥ 1,880</p>
+                </div>
+            </div>
+
+            <!-- 纯文字块 -->
+            <div class="md:col-span-1 flex items-center justify-center p-8 bg-nihplod/10 rounded-sm gallery-item">
+                <div class="text-center">
+                    <span class="block text-4xl mb-4">❋</span>
+                    <p class="font-serif text-xl text-ink">
+                        "Nature does not hurry,<br> yet everything is accomplished."
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="bg-ink text-bg py-20 px-4 md:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end">
+            <div>
+                <h2 class="text-6xl md:text-9xl font-serif opacity-20">NIHPLOD</h2>
+                <div class="mt-8 flex gap-8 text-sm tracking-widest opacity-60">
+                    <a href="#" class="hover:text-white transition-colors">WEIBO</a>
+                    <a href="#" class="hover:text-white transition-colors">RED BOOK</a>
+                    <a href="#" class="hover:text-white transition-colors">WECHAT</a>
+                </div>
+            </div>
+            <div class="mt-12 md:mt-0 text-right">
+                <p class="text-sm opacity-40">© 2024 NIHPLOD SKINCARE. <br>DESIGNED WITH SILENCE.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入 GSAP 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // 注册 ScrollTrigger 插件
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. 自定义光标逻辑
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // 点跟随（无延迟）
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // 圈跟随（GSAP实现平滑延迟）
+            gsap.to(cursorOutline, {
+                x: posX,
+                y: posY,
+                duration: 0.15,
+                ease: "power2.out"
+            });
+        });
+
+        // 悬停交互效果
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => {
+                const text = trigger.getAttribute('data-cursor-text');
+                
+                // 变大并改变颜色
+                gsap.to(cursorOutline, {
+                    width: 80,
+                    height: 80,
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    borderColor: 'transparent',
+                    duration: 0.3
+                });
+                
+                if(text) {
+                    // 如果有文字需求（这里简化处理，实际需添加内部文字DOM）
+                    // cursorOutline.innerHTML = text; 
+                }
+            });
+
+            trigger.addEventListener('mouseleave', () => {
+                gsap.to(cursorOutline, {
+                    width: 40,
+                    height: 40,
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(62, 60, 58, 0.5)',
+                    duration: 0.3
+                });
+            });
+        });
+
+        // 2. 首页 Hero 动画 (入场)
+        const tl = gsap.timeline();
+        
+        tl.from(".hero-text-area", {
+            y: 50,
+            opacity: 0,
+            duration: 1.2,
+            ease: "power3.out",
+            stagger: 0.2
+        })
+        .from(".hero-img-area", {
+            scale: 0.9,
+            opacity: 0,
+            duration: 1.5,
+            ease: "expo.out"
+        }, "-=1")
+        .from(".floating-card", {
+            y: 100,
+            opacity: 0,
+            rotation: 10,
+            duration: 1.5,
+            ease: "back.out(1.7)"
+        }, "-=1");
+
+        // 3. 滚动视差效果 (Parallax)
+        gsap.utils.toArray('.img-container').forEach(container => {
+            const img = container.querySelector('.img-parallax');
+            
+            gsap.to(img, {
+                yPercent: 20, // 图片向下移动20%
+                ease: "none",
+                scrollTrigger: {
+                    trigger: container,
+                    start: "top bottom", // 容器顶部到达视口底部开始
+                    end: "bottom top",   // 容器底部离开视口顶部结束
+                    scrub: true          // 绑定滚动条进度
+                }
+            });
+        });
+
+        // 4. 文字渐显效果
+        gsap.utils.toArray('.reveal-text').forEach(text => {
+            gsap.to(text, {
+                opacity: 1,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: text,
+                    start: "top 80%",
+                    end: "top 40%",
+                    scrub: true
+                }
+            });
+        });
+
+        // 5. 画廊卡片错落浮现
+        gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+            gsap.from(item, {
+                y: 100,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 90%"
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
